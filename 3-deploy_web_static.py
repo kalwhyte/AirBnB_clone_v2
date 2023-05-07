@@ -38,8 +38,10 @@ def do_deploy(archive_path):
         run('rm /tmp/{}'.format(file_n))
         run('mv {0}{1}/web_static/* {0}{1}/'.format(path, no_ext))
         run('rm -rf {}{}/web_static'.format(path, no_ext))
-        run('rm -rf /data/web_static/current')
-        run('ln -s {}{}/ /data/web_static/current'.format(path, no_ext))
+        run('sudo rm -rf /data/web_static/current')
+        run('sudo ln -s {}{}/ /data/web_static/current'.format(path, no_ext))
+        run('chmod -R 755 {}{}/'.format(path, no_ext))
+        run('sudo rm -rf {}{}'.format(path, no_ext))
         return True
     except FileNotFoundError:
         return False

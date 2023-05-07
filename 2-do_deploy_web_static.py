@@ -6,13 +6,15 @@
     Return False iff archive path doesn't exist
 """
 
-from fabric.api import put, run, env
+from fabric.api import put, run, env, sudo
 from os.path import exists
 env.hosts = ['34.207.237.54', '54.160.84.46']
 env.user = 'ubuntu'
 env.identity = '~/.ssh/school'
 env.password = None
 
+run("rm -rf /data/web_static/releases/web_static_20230506221613/images")
+run("rm -rf /data/web_static/releases/web_static_20230506221613/styles")
 
 def do_deploy(archive_path):
     """
@@ -21,18 +23,20 @@ def do_deploy(archive_path):
     if exists(archive_path) is False:
         return False
     try:
-        file_N = archive_path.split("/")[-1]
-        n = file_N.split(".")[0]
-        path = "/data/web_static/releases/"
-        put(archive_path, '/tmp/')
-        run('mkdir -p {}{}/'.format(path, n))
-        run('tar -xzf /tmp/{} -C {}{}/'.format(file_N, path, n))
-        run('rm /tmp/{}'.format(file_N))
-        run('mv {0}{1}/web_static/* {0}{1}/'.format(path, n))
-        run('rm -rf {}{}/web_static'.format(path, n))
-        run('rm -rf /data/web_static/current')
-        run('ln -s {}{}/ /data/web_static/current'.format(path, n))
-        run('chmod -R 755 /data/')
+        archive_name = archive_path.split("/")[-1]
+        no_ext = archive_name.split(".")[0]
+        path_no_ext = "/data/web_static/releases/" + no_ext
+
+        put(archive_path, "/tmp/")
+        run("mkdir -p {}".format(path_no_ext))
+        run("tar -xzf /tmp/{} -C {}/".format(archive_name, path_no_ext))
+        run("rm /tmp/{}".format(archive_name))
+        run("mv {}/web_static/* {}/".format(path_no_ext, path_no_ext))
+        run("rm -rf {}/web_static".format(path_no_ext))
+        run("rm -rf /data/web_static/current")
+        sudo("ln -s {}/ /data/web_static/current".format(path_no_ext))
+        sudo("chmod -R 755 {}".format(path_no_ext))
+
         print("New version deployed!")
         return True
     except FileNotFoundError:

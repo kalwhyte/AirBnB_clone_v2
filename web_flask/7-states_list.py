@@ -4,7 +4,11 @@
     Runs a Flask web application on 0.0.0.0:5000
 
 """
+<<<<<<< HEAD
 from models import storage
+=======
+from models.storage import storage
+>>>>>>> 7e84b8d77bfaf2ea8b7630ba7ac3e39e93694429
 from flask import Flask
 from flask import render_template
 app = Flask(__name__)

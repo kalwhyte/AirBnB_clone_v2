@@ -17,4 +17,9 @@ class Amenity(BaseModel, Base):
     """
     __tablename__ = "amenities"
     name = Column(String(128), nullable=False)
+<<<<<<< HEAD
     # place_amenities = relationship("Place", secondary="place_amenity", viewonly=False, overlaps="place_amenities")
+=======
+    #place_amenities = relationship("Place", secondary="place_amenity",
+				#viewonly=False, overlaps="place_amenities")
+>>>>>>> 7e84b8d77bfaf2ea8b7630ba7ac3e39e93694429
